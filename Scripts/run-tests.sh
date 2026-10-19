@@ -104,6 +104,8 @@ run() {
 }
 
 L=Tinycast/Features/Launcher/Model
+run color-picker-test      Tinycast/Features/ColorPicker/ColorPickerCoordinator.swift \
+                           Tinycast/Features/Clipboard/Model/{ColorValue,ColorFormat,ColorSpaces}.swift
 run slow -O fuzz-test      $L/SearchRelevance.swift $L/ScriptRomanization.swift \
                            $L/LauncherMatch.swift $L/EntryNaming.swift $L/LauncherOrder.swift \
                            $L/LauncherRankingStore.swift $L/LauncherSuggestions.swift
