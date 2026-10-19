@@ -197,6 +197,8 @@ final class LauncherCoordinator {
         case .openCamera:
             dismissPalette()
             Task { await core.cameraCoordinator.show() }
+        case .pickColor:
+            core.colorPickerCoordinator.pickColor()
         case .define:
             core.dictionaryCoordinator.show()
         case .openInBrowser, .runShellCommand:

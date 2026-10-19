@@ -215,6 +215,17 @@ final class AppCore {
         settings: settings, appIndex: appIndex, session: windowSwitch, palette: palette,
         paletteCoordinator: paletteCoordinator, core: self)
     @ObservationIgnored private(set) lazy var cameraCoordinator = CameraCoordinator(core: self)
+    @ObservationIgnored private(set) lazy var colorPickerCoordinator = ColorPickerCoordinator(
+        hidePalette: { [unowned self] in
+            guard self.paletteCoordinator.isVisible else { return }
+            self.paletteCoordinator.hidePalette(restoreFocus: false)
+        },
+        showCopied: { [unowned self] hex in
+            self.showMessage(String(localized: "Copied \(hex)"))
+        },
+        showFailure: { [unowned self] in
+            self.showMessage(String(localized: "Couldn’t copy color"), tone: .danger)
+        })
     @ObservationIgnored private(set) lazy var dictionaryCoordinator = DictionaryCoordinator(
         paletteCoordinator: paletteCoordinator)
     @ObservationIgnored private(set) lazy var updateCoordinator = UpdateCoordinator(

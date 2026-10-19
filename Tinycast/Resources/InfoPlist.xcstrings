@@ -1,6 +1,18 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "CFBundleName" : {
+      "comment" : "Bundle name",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tinycast Dev"
+          }
+        }
+      }
+    },
     "NSAppleEventsUsageDescription" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -233,6 +245,18 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tinycast 显示相机预览，方便你查看自己的形象，并将拍摄的照片拷贝到剪贴板。"
+          }
+        }
+      }
+    },
+    "NSHumanReadableCopyright" : {
+      "comment" : "Copyright (human-readable)",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Tinycast"
           }
         }
       }
