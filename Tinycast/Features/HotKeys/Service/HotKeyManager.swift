@@ -421,7 +421,17 @@ final class HotKeyManager {
             holdKey: dictationBinding.flatMap { modifierTaps[$0] == .dictation ? holdKey : nil })
     }
 
-    private func perform(_ action: HotKeyAction) {
+    func modifierConflict(for key: ModifierKey) -> String? {
+        for action in candidateActions {
+            guard let binding = binding(for: action),
+                key.singleBinding.conflicts(with: binding, holdsModifier: true)
+            else { continue }
+            return displayName(of: action)
+        }
+        return nil
+    }
+
+    func perform(_ action: HotKeyAction) {
         // The category switch, the way each feature switch already guards its own funnel.
         guard allowsAction?(action) ?? true else { return }
         switch action {

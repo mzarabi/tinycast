@@ -42,6 +42,8 @@ enum SettingsFileKey: String, CaseIterable, Sendable {
     case quicklinkConfirmsBeforeDelete = "quicklinks.confirmsBeforeDelete"
     case quicklinkCommands = "quicklinks.commands"
     case appleShortcutsEnabled = "appleShortcuts.enabled"
+    case leaderTrigger = "leaderMode.trigger"
+    case leaderBindings = "leaderMode.bindings"
     case aiEnabled = "ai.enabled"
     case aiWebSearch = "ai.webSearch"
     case aiChoices = "ai.choices"

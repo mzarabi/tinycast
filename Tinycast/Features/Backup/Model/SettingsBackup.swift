@@ -29,6 +29,8 @@ struct SettingsBackup: Codable {
         var hyperKeyIncludesShift: Bool?
         var hyperKeyQuickPress: String?
         var hyperKeySecureInputCompatibility: Bool?
+        var leaderTrigger: String?
+        var leaderBindings: String?
         var emojiSkinTone: String?
         var emojiGridColumns: Int?
         var showInMenuBar: Bool?
@@ -143,6 +145,8 @@ extension SettingsBackup {
             hyperKeyIncludesShift: s.hyperKeyIncludesShift,
             hyperKeyQuickPress: s.hyperKeyQuickPress.rawValue,
             hyperKeySecureInputCompatibility: s.hyperKeySecureInputCompatibility,
+            leaderTrigger: s.leaderTrigger,
+            leaderBindings: s.leaderBindings,
             emojiSkinTone: s.emojiSkinTone.rawValue,
             emojiGridColumns: s.emojiGridColumns.rawValue,
             showInMenuBar: s.showInMenuBar,
@@ -341,6 +345,16 @@ extension SettingsBackup {
         }
         if let flag = s.hyperKeySecureInputCompatibility {
             settings.hyperKeySecureInputCompatibility = flag
+            count += 1
+        }
+        if let trigger = s.leaderTrigger,
+            LeaderCoordinator.triggers.contains(where: { $0.rawValue == trigger })
+        {
+            settings.leaderTrigger = trigger
+            count += 1
+        }
+        if let bindings = s.leaderBindings, LeaderNode.decode(bindings) != nil {
+            settings.leaderBindings = bindings
             count += 1
         }
         if let raw = s.emojiSkinTone, let tone = EmojiSkinTone(rawValue: raw) {

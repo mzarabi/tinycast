@@ -45,6 +45,11 @@ enum SettingsFileSchema {
         case .openOnCursorScreen: return bind(settings, \.openOnCursorScreen)
         case .paletteDraggable: return bind(settings, \.paletteDraggable)
         case .hyperKey: return bind(settings, \.hyperKey)
+        case .leaderTrigger:
+            return bind(settings, \.leaderTrigger) { value in
+                LeaderCoordinator.triggers.contains(where: { $0.rawValue == value }) ? value : nil
+            }
+        case .leaderBindings: return LeaderSettingsFile.binding(settings: settings)
         case .hyperKeyIncludesShift: return bind(settings, \.hyperKeyIncludesShift)
         case .hyperKeyQuickPress: return bind(settings, \.hyperKeyQuickPress)
         case .hyperKeySecureInputCompatibility:

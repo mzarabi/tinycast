@@ -14,8 +14,38 @@ struct HotKeyDispatchTest {
 
     static func main() {
         for includesShift in [false, true] { dispatch(includesShift: includesShift) }
+        modifierConflicts()
         print("\(checks) dispatch checks; \(failures) failures")
         if failures > 0 { exit(1) }
+    }
+
+    static func modifierConflicts() {
+        let domain = "tinycast.leader-conflicts-test.\(UUID())"
+        let defaults = UserDefaults(suiteName: domain)!
+        defer { defaults.removePersistentDomain(forName: domain) }
+        let manager = HotKeyManager(defaults: defaults)
+        check("unbound leader trigger is available", manager.modifierConflict(for: .rightCommand) == nil)
+        manager.setBinding(.modifier(.rightCommand), for: .togglePalette)
+        check("single modifier reserves leader trigger", manager.modifierConflict(for: .rightCommand) != nil)
+        check("opposite side stays available", manager.modifierConflict(for: .leftCommand) == nil)
+        manager.setBinding(.doubleModifier(.rightCommand), for: .togglePalette)
+        check("double modifier reserves leader trigger", manager.modifierConflict(for: .rightCommand) != nil)
+        manager.setBinding(.doubleTap(.command), for: .togglePalette)
+        check("generic double tap reserves both sides", manager.modifierConflict(for: .leftCommand) != nil)
+        check("generic double tap reserves right side", manager.modifierConflict(for: .rightCommand) != nil)
+        manager.setBinding(nil, for: .togglePalette)
+        check("unbinding frees leader trigger", manager.modifierConflict(for: .rightCommand) == nil)
+        manager.setBinding(.modifier(.rightCommand), for: .dictation)
+        manager.dictationHoldToTalk = true
+        check("dictation reserves leader trigger", manager.modifierConflict(for: .rightCommand) != nil)
+        manager.allowsAction = { _ in false }
+        var ran = false
+        manager.onTogglePalette = { ran = true }
+        manager.perform(.togglePalette)
+        check("leader dispatch retains feature gates", !ran)
+        manager.allowsAction = { _ in true }
+        manager.perform(.togglePalette)
+        check("leader dispatch shares ordinary action funnel", ran)
     }
 
     static func dispatch(includesShift: Bool) {

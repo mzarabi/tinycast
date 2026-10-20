@@ -25,6 +25,8 @@ final class AppCore {
         syntheticEventTag: Paster.tinycastEventTag)
     let textInjector: TextInjector
     let hotKeys = HotKeyManager()
+    @ObservationIgnored private(set) lazy var leaderCoordinator = LeaderCoordinator(
+        settings: settings, hotKeys: hotKeys, appIndex: appIndex, ticker: healthTicker)
     let dictationAudioDucker = DictationAudioDucker()
     @ObservationIgnored private(set) lazy var dictationModels =
         DictationModelStore(idleRelease: settings.dictationIdleRelease)
@@ -449,6 +451,12 @@ final class AppCore {
             hyperKey.start()
             dictationKey.onProblem = { [weak self] in self?.showMessage($0, tone: .danger) }
             dictationKey.start()
+            leaderCoordinator.canCapture = { [weak self] in
+                guard let self else { return false }
+                return hotKeys.recordingAction == nil && !isShowingDialog && !palette.isVisible
+            }
+            leaderCoordinator.onProblem = { [weak self] in self?.showMessage($0, tone: .danger) }
+            leaderCoordinator.start()
 
             snippetsStore.onSnapshot = { [weak self] snapshot in
                 guard let self else { return }
@@ -578,6 +586,7 @@ final class AppCore {
     }
 
     func prepareForTermination() {
+        leaderCoordinator.stop()
         if settings.dictationEnabled { dictationCoordinator.prepareForTermination() }
         settingsFile?.flush()
         clipboardTextIndexer?.stop()
@@ -652,6 +661,21 @@ final class AppCore {
     // MARK: - Feature switches
 
     private func observeFeatureSwitches() {
+        track(
+            hotKeys, { _ = $0.revision; _ = $0.recordingAction },
+            reproject: { $0.leaderCoordinator.apply() })
+        track(palette, { _ = $0.isVisible }, reproject: { $0.leaderCoordinator.healthCheck() })
+        track(self, { _ = $0.isShowingDialog }, reproject: { $0.leaderCoordinator.healthCheck() })
+        track(
+            {
+                _ = $0.leaderEnabled
+                _ = $0.leaderTrigger
+                _ = $0.leaderBindings
+                _ = $0.hyperKey
+                _ = $0.hyperKeySecureInputCompatibility
+                _ = $0.dictationEnabled
+                _ = $0.dictationMode
+            }, reproject: { $0.leaderCoordinator.apply() })
         track(
             { _ = $0.automaticallyCheckForUpdates },
             reproject: { $0.updateCoordinator.applyAutomaticChecking() })

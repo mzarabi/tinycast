@@ -182,6 +182,18 @@ final class AppSettings {
         didSet { defaults.set(hyperKeyIncludesShift, forKey: Key.hyperKeyIncludesShift.rawValue) }
     }
 
+    var leaderEnabled: Bool {
+        didSet { defaults.set(leaderEnabled, forKey: Key.leaderEnabled.rawValue) }
+    }
+
+    var leaderTrigger: String {
+        didSet { defaults.set(leaderTrigger, forKey: Key.leaderTrigger.rawValue) }
+    }
+
+    var leaderBindings: String {
+        didSet { defaults.set(leaderBindings, forKey: Key.leaderBindings.rawValue) }
+    }
+
     var hyperKeyQuickPress: HyperKeyQuickPress {
         didSet {
             defaults.set(hyperKeyQuickPress.rawValue, forKey: Key.hyperKeyQuickPress.rawValue)
@@ -704,6 +716,9 @@ final class AppSettings {
             ?? .none
         hyperKeySecureInputCompatibility = defaults.bool(
             forKey: Key.hyperKeySecureInputCompatibility.rawValue)
+        leaderEnabled = defaults.bool(forKey: Key.leaderEnabled.rawValue)
+        leaderTrigger = defaults.string(forKey: Key.leaderTrigger.rawValue) ?? "rightCommand"
+        leaderBindings = defaults.string(forKey: Key.leaderBindings.rawValue) ?? "[]"
         emojiSkinTone =
             defaults.string(forKey: Key.emojiSkinTone.rawValue).flatMap(EmojiSkinTone.init) ?? .none
         emojiGridColumns =
