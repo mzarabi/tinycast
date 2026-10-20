@@ -1,13 +1,14 @@
 enum SettingsTab: CaseIterable, Identifiable {
     case general, applications, systemSettings, systemActions, commands, quicklinks, appleShortcuts,
         fallbacks, clipboard, snippets, fileSearch, windowManagement, navigation, notes, calendar, emoji,
-        dictation, ai, quickActions, extensions, permissions, backup, about
+        dictation, ai, quickActions, extensions, leaderMode, permissions, backup, about
     /// The case, never an index: a selectable `List` flattens section and row IDs together.
     var id: Self { self }
 
     var title: String {
         switch self {
         case .general: return String(localized: "General")
+        case .leaderMode: return String(localized: "Leader Mode")
         case .applications: return String(localized: "Applications")
         case .systemSettings: return String(localized: "System Settings")
         case .systemActions: return String(localized: "System Actions")
@@ -36,6 +37,7 @@ enum SettingsTab: CaseIterable, Identifiable {
     var systemImage: String {
         switch self {
         case .general: return "switch.2"
+        case .leaderMode: return "keyboard"
         case .applications: return "square.grid.2x2"
         case .systemSettings: return "gearshape"
         case .systemActions: return "bolt"
@@ -83,7 +85,7 @@ enum SettingsSection: CaseIterable, Identifiable {
         case .launcher:
             return [
                 .applications, .systemSettings, .systemActions, .commands, .quicklinks,
-                .appleShortcuts, .fallbacks
+                .appleShortcuts, .leaderMode, .fallbacks
             ]
         case .features:
             // Everyday tools first; AI and extensions are opt-in extras.

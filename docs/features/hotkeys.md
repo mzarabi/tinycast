@@ -15,6 +15,9 @@
 writes one `HotKeyBinding`, so all cases share persistence, conflict detection, the recorder and
 the keycap rendering — only the _engine_ differs.
 
+[Leader Mode](leader-mode.md) adds a separate held-modifier tree, with latched groups and the same
+action dispatch funnel. It does not change `HotKeyBinding` or make ordinary chords side-specific.
+
 Carbon's dispatcher enters through an explicit `@MainActor` callback. Press and release handlers
 return `OSStatus` synchronously, preserving event order and hold-to-talk release handling.
 
